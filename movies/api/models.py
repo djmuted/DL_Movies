@@ -8,12 +8,15 @@ class Movie(models.Model):
     title = models.CharField(max_length=255)
     tagline = models.TextField(null=True, blank=True)
     overview = models.TextField(null=True, blank=True)
-    release_date = models.DateField()
-    homepage = models.URLField(null=True, blank=True)
+    release_date = models.DateField(null=True, blank=True)
+    homepage = models.URLField(max_length=500, null=True, blank=True)
     imdb_id = models.CharField(max_length=24, null=True, blank=True)
     adult = models.BooleanField()
     budget = models.IntegerField(null=True)
     genres = models.JSONField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self) -> str:
         return self.title
@@ -24,12 +27,8 @@ class Profile(models.Model):
     liked_movies = models.ManyToManyField(Movie, blank=True)
 
 
-@receiver(post_save, sender=User)  # create user profile on user account creation
-def create_user_profile(sender, instance, created, **kwargs):
+@receiver(post_save, sender=User)  # save user profile on user account update
+def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)  # save user profile on user account update
-def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
