@@ -24,12 +24,12 @@ class Profile(models.Model):
     liked_movies = models.ManyToManyField(Movie, blank=True)
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=User)  # create user profile on user account creation
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=User)  # save user profile on user account update
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
