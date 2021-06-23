@@ -1,0 +1,27 @@
+version: "2.2"
+services:
+  web:
+    environment: 
+      DEPLOYMENT_ENV: DEV
+      SQL_HOST: db
+      SQL_USER: postgres
+      SQL_PASSWORD: 3LvR6E5ZEpz7wv
+      SQL_DATABASE: movies
+    build: .
+    tty: true
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "81:80"
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 3LvR6E5ZEpz7wv
+      POSTGRES_DB: movies
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

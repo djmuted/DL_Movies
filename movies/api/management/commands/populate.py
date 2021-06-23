@@ -13,6 +13,10 @@ class Command(BaseCommand):
         parser.add_argument('csv_file', nargs='?', default='movies_metadata.csv')
 
     def handle(self, *args, **options):
+        movie_count = Movie.objects.count()
+        if movie_count > 1000:
+            self.stdout.write(self.style.WARNING('Database is already populated with %d entries' % movie_count))
+            return
         self.stdout.write('Reading %s' % options['csv_file'])
         df = pd.read_csv(options['csv_file'])
         df = df[df['title'].notna()]
