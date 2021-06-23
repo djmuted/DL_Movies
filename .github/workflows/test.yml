@@ -1,9 +1,9 @@
 name: Continous Integration
 
 on: 
-  pull_request:
+  push:
       branches: 
-        - development
+        - master
 
 jobs:
   build:
