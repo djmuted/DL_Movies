@@ -14,4 +14,8 @@ tdqm==0.0.1
 toml==0.10.2
 tqdm==4.61.1
 typing-extensions==3.10.0.0
-uWSGI==2.0.19.1
+uWSGI==2.0.19.1 ; sys_platform == "linux"
+djoser==2.1.0
+PyYAML==5.4.1
+drf-spectacular==0.17.2
+django-extensions==3.1.3

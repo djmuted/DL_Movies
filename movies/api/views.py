@@ -1,12 +1,15 @@
 from datetime import datetime
 
-from rest_framework import serializers, viewsets
-from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+from rest_framework import generics, viewsets
 from rest_framework.exceptions import NotFound, ParseError
-from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
 from .models import Movie, Profile
-from .serializers import MovieSerializer, ProfileSerializer
+from .serializers import MovieSerializer, UserSerializer
+
+User = get_user_model()
 
 
 class MovieViewSet(viewsets.ReadOnlyModelViewSet):
@@ -36,18 +39,10 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-class ProfileViewSet(LoginRequiredMixin, viewsets.GenericViewSet):
-    serializer_class = ProfileSerializer
-
-    def list(self, request, *args, **kwargs):
-        instance = Profile.objects.get(user=request.user)
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-
-class FavoriteMoviesViewSet(LoginRequiredMixin, viewsets.GenericViewSet):
+class FavoriteMoviesViewSet(viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Movie.objects.all()
-    serializer_class = serializers.Serializer
+    serializer_class = MovieSerializer
 
     """
     GET /api/favorites/
@@ -84,3 +79,9 @@ class FavoriteMoviesViewSet(LoginRequiredMixin, viewsets.GenericViewSet):
         profile.liked_movies.remove(pk)
         profile.save()
         return Response()  # 200 OK
+
+
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny, )

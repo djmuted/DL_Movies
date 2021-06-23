@@ -1,9 +1,10 @@
 import json
-import pandas as pd
+
 import numpy as np
-from tqdm import tqdm
+import pandas as pd
 from django.core.management.base import BaseCommand, CommandError
 from movies.api.models import Movie
+from tqdm import tqdm
 
 
 class Command(BaseCommand):
