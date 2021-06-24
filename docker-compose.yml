@@ -3,6 +3,7 @@ services:
   web:
     environment: 
       DEPLOYMENT_ENV: DEV
+      API_URL: delto.panfu.pw
       SQL_HOST: db
       SQL_USER: postgres
       SQL_PASSWORD: 3LvR6E5ZEpz7wv
